@@ -1,4 +1,4 @@
-# 👥 Customer Segmentation with RFM & Clustering
+# 👥 Customer Segmentation with RFM & KMeans Clustering
 
 ![Python](https://img.shields.io/badge/Python-3.10-blue)
 ![Pandas](https://img.shields.io/badge/Data-Pandas-green)
@@ -11,7 +11,7 @@ We use **RFM analysis (Recency, Frequency, Monetary)** combined with **KMeans cl
 
 The deliverables include:
 - Cleaned datasets (`customers_rfm.csv`, `customers_segments.csv`)  
-- Visualizations (`inertia_plot.png`, `cluster_scatter.png`)  
+- Visualizations (`inertia_plot.png`, `cluster_scatter.png`, `cluster_metrics.csv`)  
 - Automated **PDF business report** (`segmentation_report.pdf`)  
 
 ---
@@ -51,7 +51,14 @@ Contains sample e-commerce transactions.
      - `inertia_plot.png` (Elbow method)
      - `cluster_scatter.png` (visualization)
 
-3. **Reporting (`segmentation_report.py`)**
+3. **Evaluation (`segmentation_eval.py`)**
+   - Compares clustering quality using:
+     - Silhouette Score  
+     - Davies–Bouldin Index  
+     - Calinski–Harabasz Score  
+   - Outputs → `cluster_metrics.csv`
+
+4. **Reporting (`segmentation_report.py`)**
    - Summarizes cluster profiles.
    - Includes:
      - Table with averages per cluster
@@ -65,14 +72,19 @@ Contains sample e-commerce transactions.
 
 You can reproduce this project using either **pip** or **conda**.
 
-### Option 1 — pip
+### Option A — pip
 ```bash
 pip install -r requirements.txt
-Option 2 — conda
+Option B — conda
 bash
 Αντιγραφή κώδικα
 conda env create -f environment.yml
 conda activate segmentation-env
+For development (linting, tests):
+
+bash
+Αντιγραφή κώδικα
+pip install -r requirements-dev.txt
 🚀 How to Run
 bash
 Αντιγραφή κώδικα
@@ -82,7 +94,10 @@ python rfm_build.py --plots
 # 2. Train clusters (default: 4 clusters)
 python segmentation_train.py --clusters 4 --plots
 
-# 3. Generate PDF report
+# 3. Evaluate clustering quality (2 ≤ k ≤ 8)
+python segmentation_eval.py
+
+# 4. Generate PDF report
 python segmentation_report.py
 Outputs:
 
@@ -92,7 +107,9 @@ customers_segments.csv — RFM + cluster labels
 
 inertia_plot.png, cluster_scatter.png — plots
 
-segmentation_report.pdf — final report
+cluster_metrics.csv — clustering metrics
+
+segmentation_report.pdf — final business report
 
 📈 Results (Demo)
 Cluster Summary (example from demo data)
@@ -106,6 +123,15 @@ Visualizations
 Elbow Method (Inertia):
 
 Clusters (Frequency vs Monetary):
+
+Clustering Metrics (example cluster_metrics.csv)
+k	silhouette	davies_bouldin	calinski_harabasz
+2	0.52	0.74	312.4
+3	0.58	0.69	428.9
+4	0.61	0.65	510.3
+5	0.55	0.72	480.1
+
+(→ In this demo, k=4 shows a good balance of silhouette and stability.)
 
 📑 Executive Summary
 Champions (Cluster 3) → very recent, high-value customers (VIPs).
@@ -130,3 +156,7 @@ requirements.txt — pip dependencies
 requirements-dev.txt — dev tools (pytest, flake8, black, mypy)
 
 environment.yml — Conda environment
+
+.github/workflows/ci.yml — GitHub Actions CI (smoke tests)
+
+            | GR               
